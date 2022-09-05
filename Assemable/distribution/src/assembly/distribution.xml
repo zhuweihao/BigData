@@ -1,0 +1,70 @@
+<assembly>
+    <id>distribution</id>
+    <formats>
+        <format>jar</format>
+        <format>dir</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <includes>
+                <include>com.zhuweihao:child1</include>
+                <include>com.zhuweihao:child2</include>
+            </includes>
+            <sources>
+                <includeModuleDirectory>false</includeModuleDirectory>
+                <fileSets>
+                    <fileSet>
+                        <outputDirectory>sources/${module.artifactId}</outputDirectory>
+                        <excludes>
+                            <exclude>${project.build.directory}/**</exclude>
+                            <exclude>${basedir}/*.iml</exclude>
+                            <exclude>${basedir}/*.xml</exclude>
+                        </excludes>
+                    </fileSet>
+                </fileSets>
+            </sources>
+            <binaries>
+                <outputDirectory>bin</outputDirectory>
+                <unpack>false</unpack>
+                <dependencySets>
+                    <dependencySet>
+                        <outputDirectory>lib</outputDirectory>
+                        <includes>
+                            <include>com.zhuweihao:child2</include>
+                        </includes>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.build.directory}/classes</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <repositories>
+        <repository>
+            <includeMetadata>true</includeMetadata>
+            <outputDirectory>maven2</outputDirectory>
+        </repository>
+    </repositories>
+
+    <componentDescriptors>
+        <componentDescriptor>src/assembly/component.xml</componentDescriptor>
+    </componentDescriptors>
+
+    <containerDescriptorHandlers>
+        <containerDescriptorHandler>
+            <handlerName>file-aggregator</handlerName>
+            <configuration>
+                <filePattern>.*/file.txt</filePattern>
+                <outputPath>file.txt</outputPath>
+            </configuration>
+        </containerDescriptorHandler>
+    </containerDescriptorHandlers>
+</assembly>
