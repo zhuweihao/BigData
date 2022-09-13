@@ -1,7 +1,7 @@
-package com.zhuweihao
+package com.zhuweihao.Case
 
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.graphx.GraphLoader
+import org.apache.spark.sql.SparkSession
 
 import java.util.logging.{Level, Logger}
 

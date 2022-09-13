@@ -1,4 +1,4 @@
-package com.zhuweihao
+package com.zhuweihao.Case
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
