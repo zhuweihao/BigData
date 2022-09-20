@@ -12,6 +12,7 @@
         <module>Spark</module>
         <module>Assemable</module>
         <module>shade</module>
+        <module>Flink</module>
     </modules>
 
     <properties>
