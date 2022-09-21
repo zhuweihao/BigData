@@ -12,17 +12,17 @@ import java.util.Arrays;
 
 /**
  * @Author zhuweihao
- * @Date 2022/9/20 17:48
+ * @Date 2022/9/21 9:14
  * @Description com.zhuweihao.wordCount
  */
-public class BoundedStreamWordCount {
-    public static void main(String[] args) throws Exception {
+public class StreamWordCount {
+    public static void main(String[] args) throws Exception{
         //创建流式执行环境
         StreamExecutionEnvironment streamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment();
-        //读取文件
-        DataStream<String> stringDataStream = streamExecutionEnvironment.readTextFile("Flink/src/main/resources/word.txt");
+        //读取文本流
+        DataStream<String> dataStream = streamExecutionEnvironment.socketTextStream("10.10.11.146", 1234);
         //转换数据格式
-        SingleOutputStreamOperator<Tuple2<String, Long>> wordAndOne = stringDataStream
+        SingleOutputStreamOperator<Tuple2<String, Long>> wordAndOne = dataStream
                 .flatMap((String line, Collector<String> words) -> {
                     Arrays.stream(line.split(" ")).forEach(words::collect);
                 })
