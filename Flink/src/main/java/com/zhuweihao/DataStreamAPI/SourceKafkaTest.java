@@ -18,15 +18,15 @@ public class SourceKafkaTest {
         env.setParallelism(1);
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "172.22.5.12:9092");
-        properties.setProperty("group.id", "zwh-consumer-group");
+        properties.setProperty("group.id", "zwh");
         properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.setProperty("value.deserialize", "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.setProperty("auto.offset.reset", "latest");
+        properties.setProperty("auto.offset.reset", "earliest");
         DataStreamSource<String> stream = env.addSource(new FlinkKafkaConsumer<String>(
-                "clicks",
+                "mysql-cdc-kafka",
                 new SimpleStringSchema(),
                 properties
-        ));
+        ).setStartFromEarliest());
         stream.print("Kafka");
         env.execute();
     }

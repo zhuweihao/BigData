@@ -23,7 +23,7 @@ public class SlidingWindowJoin {
         System.out.println(resultSet);
 
         String sql2 = "update supplier set s_name=? where s_suppkey=?";
-        boolean b = JdbcUtil.executeUpdate(connection, sql2, "Supplier#000000001", 1);
+        boolean b = JdbcUtil.executeUpdate(connection, sql2, "Supplier#0000000030000", 3);
         System.out.println(b);
 
     }

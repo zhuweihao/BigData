@@ -38,7 +38,9 @@
                 </filter>
               </filters>
               <transformers>
-                <transformer />
+                <transformer>
+                  <mainClass>com.zhuweihao.CDC.MySQLBinlogSourceSQL</mainClass>
+                </transformer>
               </transformers>
             </configuration>
           </execution>
@@ -93,13 +95,14 @@
     </dependency>
   </dependencies>
   <properties>
+    <compileMode>compile</compileMode>
+    <flink.version>1.14.4</flink.version>
     <slf4j.version>1.7.30</slf4j.version>
     <java.version>1.8</java.version>
-    <scala.binary.version>2.12</scala.binary.version>
-    <compileMode>compile</compileMode>
-    <hadoop.version>3.2.4</hadoop.version>
-    <flink.version>1.14.6</flink.version>
-    <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
+    <scala.binary.version>2.12</scala.binary.version>
+    <hadoop.version>3.2.4</hadoop.version>
+    <jackson.version>2.6.0</jackson.version>
+    <maven.compiler.source>8</maven.compiler.source>
   </properties>
 </project>
