@@ -15,15 +15,11 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
  */
 public class MySQLBinlogSourceSQL {
     public static void main(String[] args) throws Exception {
-        EnvironmentSettings settings = EnvironmentSettings
-                .newInstance()
-                .inStreamingMode()
-                //.inBatchMode()
-                .build();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.enableCheckpointing(3000);
 
-        TableEnvironment tableEnvironment = TableEnvironment.create(settings);
 
-        tableEnvironment.executeSql("SET execution.checkpointing.interval = 3s");
+        StreamTableEnvironment tableEnvironment = StreamTableEnvironment.create(env);
 
         tableEnvironment.executeSql("CREATE TABLE `supplier_source`(" +
                 "`s_suppkey` INT PRIMARY KEY NOT ENFORCED," +
@@ -51,15 +47,109 @@ public class MySQLBinlogSourceSQL {
                 "`s_region` STRING," +
                 "`s_phone` STRING" +
                 ") WITH (" +
-                "'connector'='upsert-kafka'," +
+                "'connector'='kafka'," +
                 "'topic'='mysql-cdc-kafka'," +
                 "'properties.bootstrap.servers'='172.22.5.12:9092'," +
                 "'properties.group.id'='zwh'," +
-                "'key.format'='csv'," +
-                "'value.format'='csv'" +
+                "'format'='debezium-json'" +
                 ")");
 
         tableEnvironment.executeSql("insert into supplier_sink select * from supplier_source");
 
+
+    }
+
+    public static void LineorderCDC(TableEnvironment tableEnvironment) {
+        tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `lineorder_source` (" +
+                "  `lo_orderkey` int PRIMARY KEY NOT ENFORCED," +
+                "  `lo_linenumber` int ," +
+                "  `lo_custkey` int ," +
+                "  `lo_partkey` int ," +
+                "  `lo_suppkey` int ," +
+                "  `lo_orderdate` int ," +
+                "  `lo_orderpriority` string ," +
+                "  `lo_shippriority` int ," +
+                "  `lo_quantity` int ," +
+                "  `lo_extendedprice` int ," +
+                "  `lo_ordtotalprice` int ," +
+                "  `lo_discount` int ," +
+                "  `lo_revenue` int ," +
+                "  `lo_supplycost` int ," +
+                "  `lo_tax` int ," +
+                "  `lo_commitdate` int ," +
+                "  `lo_shipmode` string " +
+                ") with (" +
+                "'connector'='mysql-cdc'," +
+                "'hostname'='172.22.5.12'," +
+                "'port'='3309'," +
+                "'username'='root'," +
+                "'password'='03283x'," +
+                "'database-name'='ssb'," +
+                "'table-name'='lineorder'" +
+                ")");
+        tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `lineorder_sink` (" +
+                "  `lo_orderkey` int PRIMARY KEY NOT ENFORCED," +
+                "  `lo_linenumber` int ," +
+                "  `lo_custkey` int ," +
+                "  `lo_partkey` int ," +
+                "  `lo_suppkey` int ," +
+                "  `lo_orderdate` int ," +
+                "  `lo_orderpriority` string ," +
+                "  `lo_shippriority` int ," +
+                "  `lo_quantity` int ," +
+                "  `lo_extendedprice` int ," +
+                "  `lo_ordtotalprice` int ," +
+                "  `lo_discount` int ," +
+                "  `lo_revenue` int ," +
+                "  `lo_supplycost` int ," +
+                "  `lo_tax` int ," +
+                "  `lo_commitdate` int ," +
+                "  `lo_shipmode` string " +
+                ") with (" +
+                "'connector'='kafka'," +
+                "'topic'='mysql-cdc-kafka'," +
+                "'properties.bootstrap.servers'='172.22.5.12:9092'," +
+                "'properties.group.id'='zwh'," +
+                "'format'='debezium-json'"
+        );
+        tableEnvironment.executeSql("insert into lineorder_sink from select * from lineorder_source");
+    }
+
+    public static void CustomerCDC(TableEnvironment tableEnvironment) {
+        tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `customer_source` (" +
+                "  `c_custkey` int," +
+                "  `c_name` string," +
+                "  `c_address` string," +
+                "  `c_city` string," +
+                "  `c_nation` string," +
+                "  `c_region` string," +
+                "  `c_phone` string," +
+                "  `c_mktsegment` string" +
+                ") with (" +
+                "'connector'='mysql-cdc'," +
+                "'hostname'='172.22.5.12'," +
+                "'port'='3309'," +
+                "'username'='root'," +
+                "'password'='03283x'," +
+                "'database-name'='ssb'," +
+                "'table-name'='customer'" +
+                ")");
+        tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `customer_sink` (" +
+                "  `c_custkey` int," +
+                "  `c_name` string," +
+                "  `c_address` string," +
+                "  `c_city` string," +
+                "  `c_nation` string," +
+                "  `c_region` string," +
+                "  `c_phone` string," +
+                "  `c_mktsegment` string" +
+                ") WITH (" +
+                "'connector'='kafka'," +
+                "'topic'='mysql-cdc-kafka'," +
+                "'properties.bootstrap.servers'='172.22.5.12:9092'," +
+                "'properties.group.id'='zwh'," +
+                "'format'='debezium-json'" +
+                ")");
+        tableEnvironment.executeSql("insert into customer_sink from select * from customer_source");
     }
 }
