@@ -1,10 +1,15 @@
 package com.zhuweihao.DataStreamAPI;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -23,11 +28,21 @@ public class SourceKafkaTest {
         properties.setProperty("value.deserialize", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.setProperty("auto.offset.reset", "earliest");
         DataStreamSource<String> stream = env.addSource(new FlinkKafkaConsumer<String>(
-                "mysql-cdc-kafka",
+                "supplier-cdc",
                 new SimpleStringSchema(),
                 properties
         ).setStartFromEarliest());
-        stream.print("Kafka");
+//        stream.filter(new FilterFunction<String>() {
+//            @Override
+//            public boolean filter(String s) throws Exception {
+//                Map map = JSON.parseObject(s);
+//                Object after = map.get("after");
+//                JSONObject jsonObject = JSON.parseObject(after.toString());
+//                int c_custkey = jsonObject.getIntValue("c_custkey");
+//                return c_custkey==30000;
+//            }
+//        }).print();
+        stream.print();
         env.execute();
     }
 }

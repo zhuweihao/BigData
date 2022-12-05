@@ -3,6 +3,7 @@ package com.zhuweihao.CDC;
 import com.ververica.cdc.connectors.mysql.source.MySqlSource;
 import com.ververica.cdc.connectors.mysql.table.StartupOptions;
 import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
+import com.zhuweihao.Utils.CustomerJsonDeserializationSchema;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.connector.base.DeliveryGuarantee;
@@ -28,7 +29,7 @@ public class MySqlBinlogSource {
                 .tableList("ssb.supplier") // 设置捕获的表
                 .username("root")
                 .password("03283x")
-                .deserializer(new JsonDebeziumDeserializationSchema()) // 将 SourceRecord 转换为 JSON 字符串
+                .deserializer(new CustomerJsonDeserializationSchema()) // 将 SourceRecord 转换为 JSON 字符串
                 .build();
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
