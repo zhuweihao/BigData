@@ -17,7 +17,7 @@ public class LineorderCDC {
         StreamTableEnvironment tableEnvironment = StreamTableEnvironment.create(env);
 
         tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `lineorder_source` (" +
-                "  `lo_orderkey` int PRIMARY KEY NOT ENFORCED," +
+                "  `lo_orderkey` int ," +
                 "  `lo_linenumber` int ," +
                 "  `lo_custkey` int ," +
                 "  `lo_partkey` int ," +
@@ -33,7 +33,8 @@ public class LineorderCDC {
                 "  `lo_supplycost` int ," +
                 "  `lo_tax` int ," +
                 "  `lo_commitdate` int ," +
-                "  `lo_shipmode` string " +
+                "  `lo_shipmode` string ," +
+                "PRIMARY KEY (lo_orderkey,lo_linenumber) NOT ENFORCED" +
                 ") with (" +
                 "'connector'='mysql-cdc'," +
                 "'hostname'='172.22.5.12'," +
@@ -44,7 +45,7 @@ public class LineorderCDC {
                 "'table-name'='lineorder'" +
                 ")");
         tableEnvironment.executeSql("CREATE TABLE IF NOT EXISTS `lineorder_sink` (" +
-                "  `lo_orderkey` int PRIMARY KEY NOT ENFORCED," +
+                "  `lo_orderkey` int," +
                 "  `lo_linenumber` int ," +
                 "  `lo_custkey` int ," +
                 "  `lo_partkey` int ," +
@@ -60,7 +61,8 @@ public class LineorderCDC {
                 "  `lo_supplycost` int ," +
                 "  `lo_tax` int ," +
                 "  `lo_commitdate` int ," +
-                "  `lo_shipmode` string " +
+                "  `lo_shipmode` string ," +
+                "PRIMARY KEY (lo_orderkey,lo_linenumber) NOT ENFORCED" +
                 ") with (" +
                 "'connector'='kafka'," +
                 "'topic'='lineorder-cdc'," +

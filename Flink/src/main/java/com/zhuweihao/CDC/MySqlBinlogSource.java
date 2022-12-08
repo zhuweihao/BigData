@@ -47,12 +47,12 @@ public class MySqlBinlogSource {
                 )
                 .setDeliverGuarantee(DeliveryGuarantee.AT_LEAST_ONCE)
                 .build();
-        env
-                .fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
-                // 设置 source 节点的并行度为 4
-                .setParallelism(4)
-                .sinkTo(kafkaSink)
-                .setParallelism(1);
+//        env
+//                .fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
+//                // 设置 source 节点的并行度为 4
+//                .setParallelism(4)
+//                .sinkTo(kafkaSink)
+//                .setParallelism(1);
 
         env
                 .fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")

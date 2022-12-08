@@ -11,6 +11,7 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 public class SupplierCDC {
     public static void main(String[] args) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(4);
         env.enableCheckpointing(3000);
 
         StreamTableEnvironment tableEnvironment = StreamTableEnvironment.create(env);
@@ -45,6 +46,7 @@ public class SupplierCDC {
                 "'topic'='supplier-cdc'," +
                 "'properties.bootstrap.servers'='172.22.5.12:9092'," +
                 "'properties.group.id'='zwh'," +
+//                "'scan.startup.mode' = 'latest-offset'," +
                 "'format'='debezium-json'" +
                 ")");
 
